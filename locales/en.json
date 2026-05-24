@@ -1,0 +1,12 @@
+{
+  "translation": {
+    "title": "Seoul Air Quality",
+    "pm25": "PM2.5",
+    "pm10": "PM10",
+    "status_good": "Good",
+    "status_normal": "Normal",
+    "status_bad": "Bad",
+    "refresh": "Refresh",
+    "publish_time": "Published at"
+  }
+}

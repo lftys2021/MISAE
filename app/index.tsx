@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, Alert, StyleSheet } from 'react-native';
 import { Stack } from 'expo-router'; 
-import { Ionicons } from '@expo/vector-icons'; 
+import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
+import LanguageSelector from '../components/LanguageSelector';
 
 // process.env를 타이핑하면 EXPO_PUBLIC_AIR_QUALITY_API_KEY가 자동 완성됩니다.
 const API_KEY = process.env.EXPO_PUBLIC_AIR_QUALITY_API_KEY;
@@ -38,6 +40,15 @@ const extractXmlTagValue = (xmlString: string, tagName: string): string => {
 export default function AirQualityDashboard() {
   const [loading, setLoading] = useState<boolean>(false);
   const [airData, setAirData] = useState<AirKoreaV15Item | null>(null);
+
+  const { t } = useTranslation();
+
+  // 대기질 상태 텍스트를 다국어 파일 매핑용 키로 변환하는 예시 함수
+  const getStatusTranslationKey = (status: string) => {
+    if (status === '보통') return 'status_normal';
+    if (status === '좋음') return 'status_good';
+    return 'status_bad';
+  };
 
   // 1. 등급값(1, 2, 3, 4)에 따른 색상 및 메세지 마스터 매핑
   const getGradeStyle = (grade: string) => {
@@ -149,6 +160,12 @@ export default function AirQualityDashboard() {
     <>
       <Stack.Screen options={{ headerShown: false }} />
 
+      {/* 1. 언어 선택 메뉴 컴포넌트 추가 */}
+      <LanguageSelector />
+
+      {/* 2. 고정 문자열을 t('키값') 형태로 교체 */}
+      <Text style={styles.title}>{t('title')}</Text>
+
       <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }} className="bg-gray-50 p-5">
         <View className="w-full max-w-[390px] rounded-[24px] bg-white p-6 shadow-sm flex flex-col">
           
@@ -201,10 +218,10 @@ export default function AirQualityDashboard() {
             {/* PM10 카드 */}
             <View className="flex-1 border border-gray-100 rounded-[16px] p-4 items-center bg-white relative overflow-hidden">
               <View className="flex-row items-center gap-1.5 mb-2">
-                <Text className="text-[13px] font-medium text-gray-400">PM10</Text>
+                <Text className="text-[13px] font-medium text-gray-400">{t('PM10')}</Text>
                 {rawData.pm10Grade1h !== '-' && (
                   <View style={{ backgroundColor: pm10Style.color }} className="px-1.5 py-0.5 rounded-full">
-                    <Text className="text-[9px] font-bold text-white">{pm10Style.label}</Text>
+                    <Text className="text-[9px] font-bold text-white">{t(getStatusTranslationKey('{pm10Style.label}'))}</Text>
                   </View>
                 )}
               </View>
@@ -258,3 +275,9 @@ export default function AirQualityDashboard() {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: '#f5f5f5', paddingTop: 40 },
+  title: { fontSize: 24, fontWeight: 'bold', textAlign: 'center', marginVertical: 20 },
+  card: { padding: 16, backgroundColor: '#fff', marginHorizontal: 16, borderRadius: 8 }
+});

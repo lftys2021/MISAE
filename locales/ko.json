@@ -1,0 +1,12 @@
+{
+  "translation": {
+    "title": "서울 대기질",
+    "pm25": "초미세먼지(PM2.5)",
+    "pm10": "미세먼지(PM10)",
+    "status_good": "좋음",
+    "status_normal": "보통",
+    "status_bad": "나쁨",
+    "refresh": "새로고침",
+    "publish_time": "발표 시각"
+  }
+}
